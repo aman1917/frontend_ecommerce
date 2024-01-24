@@ -2,17 +2,29 @@ import React, { useState } from "react";
 import SignImage from "../assest/login-animation.gif";
 import { BiShow } from "react-icons/bi";
 import { BiHide } from "react-icons/bi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { loginRedux } from "../redux/userSlice";
+
 const Login = () => {
   const [showPass, setShowPass] = useState(false);
   const [data, setData] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+
+  const navigate = useNavigate();
+
+  const userData = useSelector((state) => state);
+  console.log(userData.user);
+
+  const dispatch = useDispatch();
+
   const handleShowPass = () => {
     setShowPass((preve) => !preve);
   };
- 
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((preve) => {
@@ -23,10 +35,29 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const{email, password} = data;
+    const { email, password } = data;
     if (email && password) {
+      const fetchData = await fetch(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/signup`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const dataRes = await fetchData.json();
+      console.log(dataRes);
+      toast(userData.user.firstName + dataRes.message);
+      if (dataRes.alert) {
+        dispatch(loginRedux(dataRes));
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
+      }
     } else {
       alert("Please Enter Required Feilds");
     }
@@ -42,8 +73,8 @@ const Login = () => {
           <label htmlFor="email">Email</label>
           <input
             type={"email"}
-            id="username"
-            name="username"
+            id="email"
+            name="email"
             autoComplete="username"
             className="w-full mt-1 mb-2 bg-slate-200 px-2 py-2 rounded  focus-within:outline-blue-500"
             value={data.email}

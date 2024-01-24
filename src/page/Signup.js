@@ -13,7 +13,7 @@ const Signup = () => {
   const [data, setData] = useState({
     firstname: "",
     lastname: "",
-    username: "",
+    email: "",
     password: "",
     confirm: "",
     image: "",
@@ -34,15 +34,12 @@ const Signup = () => {
     });
   };
 
-  console.log(data);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { firstname, lastname, username, password, confirm } = data;
-    if (firstname && lastname && username && password && confirm) {
+    const { firstname, lastname, email, password, confirm } = data;
+    if (firstname && lastname && email && password && confirm) {
       if (password === confirm) {
-        const fetchData = await fetch(
-          `${process.env.REACT_APP_SERVER_DOMAIN}/signup`,
+        const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMAIN}/signup`,
           {
             method: "POST",
             headers: {
@@ -51,8 +48,8 @@ const Signup = () => {
             body: JSON.stringify(data),
           }
         );
-        const dataRes = await fetchData.JSON;
-        // alert(dataRes.message);
+        const dataRes = await fetchData.json();
+        alert(dataRes.message);
         toast(dataRes.message);
         if (dataRes.alert) {
           navigator("/login");
@@ -122,8 +119,8 @@ const Signup = () => {
           <label htmlFor="email">Email</label>
           <input
             type={"email"}
-            id="username"
-            name="username"
+            id="email"
+            name="email"
             autoComplete="username"
             className="w-full mt-1 mb-2 bg-slate-200 px-2 py-2 rounded  focus-within:outline-blue-500"
             value={data.username}
