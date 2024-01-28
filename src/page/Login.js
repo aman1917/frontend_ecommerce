@@ -55,7 +55,7 @@ const Login = () => {
       if (dataRes.alert) {
         dispatch(loginRedux(dataRes));
         setTimeout(() => {
-          navigate("/home");
+          navigate("/");
         }, 2000);
       }
     } else {

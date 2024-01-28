@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import logo from "../assest/logo.png";
 import { FaUserCircle } from "react-icons/fa";
 import { BsCartFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
-  const handleShowMenu =()=>{
-    setShowMenu(preve => !preve)
-  }
+  const userData = useSelector((state) => state.user);
+  console.log(userData);
+
+  const handleShowMenu = () => {
+    setShowMenu((preve) => !preve);
+  };
   return (
     <header className="fixed shadow-md w-full h-16 px-2 md:px-4 z-50 bg-white">
       {/* desktop */}
@@ -32,13 +36,31 @@ const Header = () => {
             </div>
           </div>
           <div className="text-xl text-slate-600" onClick={handleShowMenu}>
-            <div className="text-3xl cursor-pointer" >
-              <FaUserCircle />
+            <div className="text-3xl cursor-pointer w-10 h-10 rounded-full overflow-hidden drop-shadow-md">
+              {userData.image ? (
+                <img src={userData.image} className="h-full w-full" alt="" />
+              ) : (
+                <FaUserCircle />
+              )}
             </div>
             {showMenu && (
               <div className="absolute right-2 bg-white py-2 px-2 shadow drop-shadow-md flex flex-col">
-                <Link to={'newproduct'} className="whitespace-nowrap cursor-pointer">New Product</Link>
-                <Link to={'login'} className="whitespace-nowrap cursor-pointer">Login</Link>
+                <Link
+                  to={"newproduct"}
+                  className="whitespace-nowrap cursor-pointer"
+                >
+                  New Product
+                </Link>
+                {userData.image ? (
+                  <p>Logout</p>
+                ) : (
+                  <Link
+                    to={"login"}
+                    className="whitespace-nowrap cursor-pointer"
+                  >
+                    Login
+                  </Link>
+                )}
               </div>
             )}
           </div>
